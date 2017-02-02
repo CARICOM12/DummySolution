@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ButtonRaise
@@ -21,27 +22,42 @@ namespace ButtonRaise
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            foreach(Button button in buttons)
+            foreach (Button button in buttons)
             {
                 button.Location = new Point(0, button.Location.Y);
             }
         }
 
         private void StartButton_Click(object sender, EventArgs e)
-        {            
-            bool raceFinished = false;
-            while (!raceFinished)
+        {
+            new Thread(MoveButtons).Start();
+
+        }
+
+        delegate void MoveButtonsDelegate(Button[] buttons);
+
+        private void MoveButtons()
+        {
+            if (InvokeRequired)
             {
-                foreach (Button button in buttons)
+                bool raceFinished = false;
+                while (!raceFinished)
                 {
-                    int newX = button.Location.X + randomizer.Next(5);
-                    if(newX > raisePanel.Width - button.Width)
+                    this.Invoke(new MethodInvoker(delegate
                     {
-                        newX = raisePanel.Width - button.Width;
-                        raceFinished = true;
-                    } 
-                    button.Location = new Point(newX, button.Location.Y);
-                }
+                        foreach (Button button in buttons)
+                        {
+                            int newX = button.Location.X + randomizer.Next(5);
+                            if (newX > raisePanel.Width - button.Width)
+                            {
+                                newX = raisePanel.Width - button.Width;
+                                raceFinished = true;
+                            }
+                            button.Location = new Point(newX, button.Location.Y);
+                        }
+                    }));
+                    Thread.Sleep(100);
+                }                
             }
         }
     }
