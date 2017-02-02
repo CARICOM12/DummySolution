@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ButtonRaise/bin/Debug
+/DateTimeUsage/bin/Debug
+/DateTimeUsage/obj/Debug/
+/DateTimeUsage/obj/Debug
+/ButtonRaise/obj/Debug
+/.vs/DummySolution/v14
